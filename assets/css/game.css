@@ -101,6 +101,10 @@ canvas {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.btn:focus {
+    outline: none;
+}
+
 #left-btn {
     background: url(../img/arrow-left.svg) no-repeat center center;
 }
