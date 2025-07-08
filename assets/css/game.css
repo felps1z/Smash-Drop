@@ -86,13 +86,27 @@ canvas {
     width: 100%;
 }
 
+.btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #E85E06;
+    border-radius: 2.5rem;
+}
+
 .btn {
     border: none;
     cursor: pointer;
-    background: #E85E06;
-    padding: 2rem;
+    padding: 4rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 2.5rem;
+}
+
+#left-btn {
+    background: url(../img/arrow-left.svg) no-repeat center center;
+}
+
+#right-btn {
+    background: url(../img/arrow-right.svg) no-repeat center center;
 }
 
 /*FIM CONTROLES*/
