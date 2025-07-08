@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smash Drop – Salvando o Dia, Um Smash de Cada Vez!</title>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/css/game.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+</head>
+
+<body>
+
+    <!-- Início -->
+    <div id="menu">
+        <!-- Logo -->
+        <img src="./assets/img/logo_smashburguer.png" alt="Logo da Smash Burguer" id="logo">
+
+        <!-- Logo do Jogo-->
+        <div id="logo-container">
+            <img src="assets/img/logo_smashdrop.png" alt="">
+            <img src="assets/img/jimmy.png" alt="" id="jimmy">
+            <img src="assets/img/laranja.png" alt="" id="laranjinha">
+        </div>
+
+        <!-- Botoes -->
+        <button onclick="startGame()" id="play-btn">JOGAR</button>
+        <a href="https://www.instagram.com/smashcaruaru/" id="instagram">Nosso Instagram <i
+                class="fa-brands fa-instagram"></i></a>
+
+        <!-- Footer -->
+        <p id="creditos">⚡ Desenvolvido por <a href="https://www.linkedin.com/in/felps1z/">Felipe</a> e <a
+                href="https://www.linkedin.com/in/jo%C3%A3o-henrique-lopes-de-ara%C3%BAjo-freire-47220b339/">João</a>
+        </p>
+    </div>
+    <!-- FIM Início -->
+
+    <!-- Jogo -->
+    <main>
+        <!-- Cenario -->
+        <div class="cenario">
+            <!-- CLiente -->
+            <div id="cliente_container">
+                <img src="assets/img/cliente.png" alt="">
+            </div>
+
+            <!-- Recepcionista -->
+            <div id="recepcionista_container">
+                <img src="assets/img/balcao.png" alt="" id="balcao">
+                <img src="./assets/img/laranja_game.png" alt="" id="laranja">
+            </div>
+
+            <div id="chao"></div>
+        </div>
+
+        <!-- Jogo -->
+        <div id="game-container"></div>
+
+        <!-- Botoes de controle -->
+        <div class="fim">
+            <button class="btn" id="left-btn">
+                <img src="assets/img/arrow-left.svg" alt="">
+            </button>
+
+            <button class="btn" id="right-btn">
+                <img src="assets/img/arrow-right.svg" alt="">
+            </button>
+        </div>
+    </main>
+    <!-- FIM Jogo -->
+
+    <script src="./script.js"></script>
+</body>
+
+</html>

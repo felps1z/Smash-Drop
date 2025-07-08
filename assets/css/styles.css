@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lilita+One&family=Luckiest+Guy&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    font-family: "Lilita One", sans-serif;
+    color: #E7DFCC;
+    background-color: #3D3632;
+}
+
+#logo-container {
+    position: relative;
+}
+
+#jimmy {
+    position: absolute;
+    bottom: 0;
+    left: -32px;
+}
+
+#laranjinha {
+    position: absolute;
+    bottom: 0;
+    right: -32px;
+}
+
+#logo {
+    height: 6rem;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+}
+
+#menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#menu h1 {
+    font-family: "Luckiest Guy";
+    font-size: 5rem;
+    text-shadow:
+    -1px -1px 0 black,
+     1px -1px 0 black,
+    -1px  1px 0 black,
+     1px  1px 0 black;
+    
+}
+
+#menu #instagram {
+    color: #E7DFCC;
+    padding: 1rem;
+    display: flex;
+    font-size: 1.5rem;
+    align-items: center;
+    gap: 1.5rem;
+    text-decoration: none;
+}
+
+#menu #instagram i {
+    font-size: 32px;
+}
+
+#play-btn {
+    font-family: "Lilita One", sans-serif;
+    font-size: 1.5rem;
+    background: #E85E06;
+    width: 80%;
+    padding: 1.5rem 1rem;
+    border: none;
+    border-radius: 1.5rem;
+    margin: 1rem 0;
+    color: #E7DFCC;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#creditos {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    color: #8C8C8C;
+}
+
+#creditos a {
+    color: #8C8C8C;
+    text-decoration: underline;
+}
+
