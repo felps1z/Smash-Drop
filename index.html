@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -14,53 +14,45 @@
 </head>
 
 <body>
-
-    <!-- Início -->
     <div id="menu">
-        <!-- Logo -->
         <img src="./assets/img/logo_smashburguer.png" alt="Logo da Smash Burguer" id="logo">
 
-        <!-- Logo do Jogo-->
         <div id="logo-container">
             <img src="assets/img/logo_smashdrop.png" alt="">
             <img src="assets/img/jimmy.png" alt="" id="jimmy">
             <img src="assets/img/laranja.png" alt="" id="laranjinha">
         </div>
 
-        <!-- Botoes -->
         <button onclick="startGame()" id="play-btn">JOGAR</button>
         <a href="https://www.instagram.com/smashcaruaru/" id="instagram">Nosso Instagram <i
                 class="fa-brands fa-instagram"></i></a>
 
-        <!-- Footer -->
         <p id="creditos">⚡ Desenvolvido por <a href="https://www.linkedin.com/in/felps1z/">Felipe</a> e <a
                 href="https://www.linkedin.com/in/jo%C3%A3o-henrique-lopes-de-ara%C3%BAjo-freire-47220b339/">João</a>
         </p>
     </div>
-    <!-- FIM Início -->
-
-    <!-- Jogo -->
     <main>
-        <!-- Cenario -->
         <div class="cenario">
-            <!-- CLiente -->
-            <div id="cliente_container">
-                <img src="assets/img/cliente.png" alt="">
+            <div id="balao_cliente" class="oculto">
+                <p id="order-text">Carregando pedido...</p> <div id="triangulo_cliente"></div>
             </div>
-
-            <!-- Recepcionista -->
+            <div id="cliente_container">
+                <img src="assets/img/cliente.png" alt="Cliente" class="oculto"> </div>
+            
+            <div id="balao_recepcionista" class="oculto">
+                <p id="recepcionista-text">Cada ingrediente conta! Ajude Jimmy a pegar só os certos</p>
+                <div id="triangulo_recepcionista"></div>
+            </div>
             <div id="recepcionista_container">
-                <img src="assets/img/balcao.png" alt="" id="balcao">
-                <img src="./assets/img/laranja_game.png" alt="" id="laranja">
+                <img src="assets/img/balcao.png" alt="Balcão" id="balcao">
+                <img src="./assets/img/laranja_game.png" alt="Laranja" id="laranja">
             </div>
 
             <div id="chao"></div>
         </div>
 
-        <!-- Jogo -->
         <div id="game-container"></div>
 
-        <!-- Botoes de controle -->
         <div class="fim">
             <div class="btn-container">
                 <div role="button" class="btn" id="left-btn"></div>
@@ -71,8 +63,6 @@
             </div>
         </div>
     </main>
-    <!-- FIM Jogo -->
-
     <script src="./script.js"></script>
 </body>
 
