@@ -97,6 +97,7 @@ canvas {
 .btn {
     border: none;
     cursor: pointer;
+    border-radius: 2.5rem;
     padding: 4rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     -webkit-tap-highlight-color: transparent;
