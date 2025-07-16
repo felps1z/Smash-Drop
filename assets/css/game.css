@@ -167,6 +167,7 @@ canvas {
     padding: 4rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
     user-select: none;
 }
 

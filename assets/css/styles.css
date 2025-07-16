@@ -4,6 +4,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE10+/Edge */
+    user-select: none;         /* Standard */
 }
 
 body {
@@ -11,6 +15,7 @@ body {
     font-family: "Lilita One", sans-serif;
     color: #E7DFCC;
     background-color: #3D3632;
+    touch-action: none; /* Previne ações padrão como zoom e rolagem */
 }
 
 #logo-container {

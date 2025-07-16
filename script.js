@@ -156,7 +156,6 @@ function create() {
 
   const leftBtn = document.querySelector('#left-btn');
   const rightBtn = document.querySelector('#right-btn');
-
   
   leftBtn.addEventListener('pointerdown', e => {
     e.preventDefault();
@@ -169,6 +168,7 @@ function create() {
     jogador.flipX = true;
   });
   document.addEventListener('pointerup', e => {
+    e.preventDefault();
     moveLeft = false;
     moveRight = false;
   });
