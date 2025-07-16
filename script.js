@@ -2,6 +2,19 @@
 let game;
 let game_container; // Tornar game_container global para o resize listener
 
+let lastTouch = 0;
+document.addEventListener('touchend', function (e) {
+  const now = new Date().getTime();
+  if (now - lastTouch <= 300) {
+    e.preventDefault();
+  }
+  lastTouch = now;
+}, { passive: false });
+
+document.addEventListener('gesturestart', function (e) {
+  e.preventDefault();
+}, { passive: false });
+
 function startGame() {
   document.querySelector('#menu').style.display = 'none';
   document.querySelector('main').style.display = 'flex';
@@ -34,20 +47,20 @@ function startGame() {
     const recepcionistaBalao = document.getElementById("balao_recepcionista");
     const recepcionistaText = document.getElementById("recepcionista-text"); // Novo ID para o texto da recepcionista
     if (recepcionistaBalao && recepcionistaText) {
-        recepcionistaText.textContent = "Olá! Pegue os pedidos para os clientes!"; // Texto inicial
-        recepcionistaBalao.classList.remove("oculto"); // Mostra o balão
+      recepcionistaText.textContent = "Olá! Pegue os pedidos para os clientes!"; // Texto inicial
+      recepcionistaBalao.classList.remove("oculto"); // Mostra o balão
     }
 
     setTimeout(() => {
       if (recepcionistaBalao) recepcionistaBalao.classList.add("oculto"); // Oculta o balão da recepcionista
-      
+
       const clienteImg = document.querySelector("#cliente_container img");
       if (clienteImg) clienteImg.classList.remove("oculto"); // Mostra o cliente
 
       const clienteBalao = document.getElementById("balao_cliente");
       // O texto do pedido será atualizado por updateOrderText()
       if (clienteBalao) clienteBalao.classList.remove("oculto"); // Mostra o balão do cliente
-      
+
       // Opcional: Se quiser um texto inicial "Olá!" no balão do cliente antes do pedido
       // const orderTextElement = document.getElementById("order-text");
       // if (orderTextElement) orderTextElement.textContent = "Olá! Quero meu pedido!";
@@ -57,15 +70,18 @@ function startGame() {
 }
 
 // Listas de chaves para as imagens de comidas boas e ruins (DEVE USAR OS MESMOS NOMES DAS IMAGENS!)
-const goodFoodKeys = ['hamburguer', 'refrigerante', 'milkshake', 'batatas']; 
-const badFoodKeys = ['ancora_prata', 'bigorna', 'guitarra']; 
+const goodFoodKeys = ['hamburguer', 'refrigerante', 'milkshake', 'batatas'];
+const badFoodKeys = ['ancora_prata', 'bigorna', 'guitarra'];
 
 // Mapeamento de chaves de imagem para emojis (para exibir no pedido)
 const foodEmojis = {
   'hamburguer': '🍔',
   'refrigerante': '🥤',
   'milkshake': '🍦',
-  'batatas': '🍟'
+  'batatas': '🍟',
+  'ancora_prata': '⚓',
+  'bigorna': '💣',
+  'guitarra': '🎸'
 };
 
 // Objeto para definir a escala de cada tipo de comida
@@ -91,7 +107,7 @@ let vidaText;
 let faseText;
 let currentOrder = {};
 // AGORA: orderTextElement é a variável que faz referência ao elemento HTML <p id="order-text">
-let orderTextElement; 
+let orderTextElement;
 let moveLeft = false;
 let moveRight = false;
 
@@ -145,18 +161,21 @@ function create() {
   generateNewOrder();
   updateOrderText(); // Atualiza o texto do pedido na tela (agora no elemento HTML)
 
-  this.time.addEvent({
-    delay: 1000,
-    callback: dropFood,
-    callbackScope: this,
-    loop: true
-  });
+  // Espera 3 segundos (3000 ms) antes de iniciar o jogo
+  this.time.delayedCall(7000, () => {
+    this.time.addEvent({
+      delay: 1000,
+      callback: dropFood,
+      callbackScope: this,
+      loop: true
+    });
+  }, [], this);
 
   this.physics.add.overlap(jogador, comidas, catchFood, null, this);
 
   const leftBtn = document.querySelector('#left-btn');
   const rightBtn = document.querySelector('#right-btn');
-  
+
   leftBtn.addEventListener('pointerdown', e => {
     e.preventDefault();
     moveLeft = true;
@@ -189,11 +208,11 @@ function generateNewOrder() {
   let totalItemsInOrder = 0;
 
   const numItemsInOrder = Phaser.Math.Between(1 + Math.floor(fase / 2), 2 + fase);
-  
+
   for (let i = 0; i < numItemsInOrder; i++) {
     const itemKey = Phaser.Math.RND.pick(goodFoodKeys);
-    const quantity = Phaser.Math.Between(1, 3); 
-    
+    const quantity = Phaser.Math.Between(1, 3);
+
     if (currentOrder[itemKey]) {
       currentOrder[itemKey] += quantity;
     } else {
@@ -227,39 +246,37 @@ function updateOrderText() {
   }
   // Atualiza o texto do elemento HTML
   if (orderTextElement) { // Garante que o elemento existe antes de tentar modificar
-      orderTextElement.textContent = orderString; 
+    orderTextElement.textContent = orderString;
   }
 }
 
 function dropFood() {
-  const x = Phaser.Math.Between(50, 350); 
-  let isGoodChance = Phaser.Math.Between(0, 1) === 1; 
+  const x = Phaser.Math.Between(50, 350);
+  let isGoodChance = Phaser.Math.Between(0, 1) === 1;
 
-  let orderNotComplete = false;
-  for (const item in currentOrder) {
-      if (currentOrder[item] > 0) {
-          orderNotComplete = true;
-          break;
-      }
-  }
-
+  let orderNotComplete = Object.values(currentOrder).some(q => q > 0);
   if (orderNotComplete && Phaser.Math.Between(0, 3) !== 0) {
-      isGoodChance = true;
+    isGoodChance = true;
   }
 
-  let foodKey;
-  if (isGoodChance) {
-    foodKey = Phaser.Math.RND.pick(goodFoodKeys);
-  } else {
-    foodKey = Phaser.Math.RND.pick(badFoodKeys);
-  }
+  let foodKey = isGoodChance
+    ? Phaser.Math.RND.pick(goodFoodKeys)
+    : Phaser.Math.RND.pick(badFoodKeys);
 
-  const food = comidas.create(x, 10, foodKey).setScale(foodScales[foodKey] || 0.2); 
-  food.setVelocityY(Phaser.Math.Between(100, 200));
+  const emoji = foodEmojis[foodKey] || '💣'; // Padrão para ruins
 
+  const food = this.add.text(x, 10, emoji, {
+    fontSize: '32px'
+  });
+
+  this.physics.add.existing(food); // Adiciona física ao texto
+
+  food.body.setVelocityY(Phaser.Math.Between(100, 200));
   food.isGood = isGoodChance;
   food.isBad = !isGoodChance;
   food.foodType = foodKey;
+
+  comidas.add(food);
 }
 
 function catchFood(jogador, food) {
@@ -281,7 +298,7 @@ function catchFood(jogador, food) {
   if (vida <= 0) {
     const gameOverImage = this.add.image(game.config.width / 2, game.config.height / 2, 'gamerover').setDisplaySize(300, 300);
     this.physics.pause();
-    
+
     this.time.delayedCall(5000, () => {
       gameOverImage.destroy();
       game.destroy(true);
@@ -302,17 +319,20 @@ function catchFood(jogador, food) {
     fase++;
     //metaDePontos += 150; 
     faseText.setText('Fase ' + fase);
-    
+
     // Pequeno atraso antes de gerar o próximo pedido para o "Pedido: COMPLETO!" ser visível
     this.time.delayedCall(1000, () => { // 1 segundo de atraso
-        generateNewOrder();
-        updateOrderText();
+      generateNewOrder();
+      updateOrderText();
     }, [], this);
 
 
     comidas.children.iterate(food => {
-      food.setVelocityY(Phaser.Math.Between(200 + fase * 20, 300 + fase * 30));
+      if (food && food.body && food.body.setVelocityY) {
+        food.body.setVelocityY(Phaser.Math.Between(200 + fase * 20, 300 + fase * 30));
+      }
     });
+
   }
 }
 
