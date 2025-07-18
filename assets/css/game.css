@@ -100,10 +100,6 @@ main {
     justify-content: center;
 }
 
-/*#cliente_container img {
-visibility: hidden
-}*/
-
 #balcao {
     width: 200px;
     position: absolute;
@@ -128,8 +124,8 @@ visibility: hidden
     z-index: -1;
 }
 /*JOGO*/
-    .middle {
-        display: flex;
+.middle {
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -169,7 +165,9 @@ canvas {
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
-    touch-action: none;
+    touch-action: manipulation;
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
 }
 
 .btn:focus {

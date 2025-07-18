@@ -17,6 +17,8 @@ body {
     background-color: #3D3632;
     touch-action: none; /* Previne ações padrão como zoom e rolagem */
     overflow: hidden;
+    -ms-touch-action: none;
+    overscroll-behavior: contain;
 }
 
 #logo-container {

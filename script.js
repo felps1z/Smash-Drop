@@ -2,18 +2,9 @@
 let game;
 let game_container; // Tornar game_container global para o resize listener
 
-let lastTouch = 0;
-document.addEventListener('touchend', function (e) {
-  const now = new Date().getTime();
-  if (now - lastTouch <= 300) {
-    e.preventDefault();
-  }
-  lastTouch = now;
-}, { passive: false });
-
-document.addEventListener('gesturestart', function (e) {
-  e.preventDefault();
-}, { passive: false });
+document.addEventListener('gesturestart', e => e.preventDefault(), { passive: false });
+document.addEventListener('gesturechange', e => e.preventDefault(), { passive: false });
+document.addEventListener('gestureend', e => e.preventDefault(), { passive: false });
 
 function startGame() {
   document.querySelector('#menu').style.display = 'none';
@@ -84,7 +75,7 @@ const foodEmojis = {
   'guitarra': '🎸'
 };
 
-// Objeto para definir a escala de cada tipo de comida
+/* Objeto para definir a escala de cada tipo de comida
 const foodScales = {
   'hamburguer': 0.2,
   'refrigerante': 0.12,
@@ -94,7 +85,7 @@ const foodScales = {
   'bigorna': 0.13,
   'guitarra': 0.17,
 };
-
+*/
 let fase = 1;
 //let metaDePontos = 150; 
 let jogador;
@@ -111,9 +102,8 @@ let orderTextElement;
 let moveLeft = false;
 let moveRight = false;
 
-
 function preload() {
-  this.load.image('jogador', './assets/img/jimmy_game.svg');
+  this.load.image('jogador', './assets/img/jimmy_game.png');
 
   // Carregar todas as boas comidas
   this.load.image('hamburguer', './assets/img/hamburguer-1.png');
@@ -191,6 +181,17 @@ function create() {
     moveLeft = false;
     moveRight = false;
   });
+
+  const preventZoom = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  leftBtn.addEventListener('touchstart', preventZoom, { passive: false });
+  leftBtn.addEventListener('pointerdown', preventZoom, { passive: false });
+
+  rightBtn.addEventListener('touchstart', preventZoom, { passive: false });
+  rightBtn.addEventListener('pointerdown', preventZoom, { passive: false });
 }
 
 function update() {
