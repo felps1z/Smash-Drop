@@ -1,14 +1,29 @@
 // Função para iniciar o jogo
 let game;
 let game_container; // Tornar game_container global para o resize listener
+let first_time = true;
+const clienteImg = document.querySelector("#cliente_container img");
+const clienteBalao = document.getElementById("balao_cliente");
+
+document.getElementById('play-btn').addEventListener('click', () => {
+  document.querySelector('#menu').style.display = 'none';
+  document.querySelector('main').style.display = 'flex';
+  if (first_time){
+    document.getElementById('fechar-modal').addEventListener('click', () => {
+      document.querySelector('#modal-container').style.display = 'none';
+      startGame();
+    });
+    first_time = false;
+  } else {
+    startGame();
+  }
+});
 
 document.addEventListener('gesturestart', e => e.preventDefault(), { passive: false });
 document.addEventListener('gesturechange', e => e.preventDefault(), { passive: false });
 document.addEventListener('gestureend', e => e.preventDefault(), { passive: false });
 
 function startGame() {
-  document.querySelector('#menu').style.display = 'none';
-  document.querySelector('main').style.display = 'flex';
   game_container = document.querySelector('#game-container'); // Atribuir à variável global
 
   const config = {
@@ -44,50 +59,31 @@ function startGame() {
 
     setTimeout(() => {
       if (recepcionistaBalao) recepcionistaBalao.classList.add("oculto"); // Oculta o balão da recepcionista
-
-      const clienteImg = document.querySelector("#cliente_container img");
+      
       if (clienteImg) clienteImg.classList.remove("oculto"); // Mostra o cliente
-
-      const clienteBalao = document.getElementById("balao_cliente");
       // O texto do pedido será atualizado por updateOrderText()
       if (clienteBalao) clienteBalao.classList.remove("oculto"); // Mostra o balão do cliente
-
-      // Opcional: Se quiser um texto inicial "Olá!" no balão do cliente antes do pedido
-      // const orderTextElement = document.getElementById("order-text");
-      // if (orderTextElement) orderTextElement.textContent = "Olá! Quero meu pedido!";
 
     }, 5000); // Mostra por 5 segundos
   }, 2000); // Começa após 2 segundos
 }
 
-// Listas de chaves para as imagens de comidas boas e ruins (DEVE USAR OS MESMOS NOMES DAS IMAGENS!)
+// Listas de chaves para as imagens de comidas boas e ruins
 const goodFoodKeys = ['hamburguer', 'refrigerante', 'milkshake', 'batatas'];
-const badFoodKeys = ['ancora_prata', 'bigorna', 'guitarra'];
+const badFoodKeys = ['ancora_prata', 'bigorna', 'bota'];
 
-// Mapeamento de chaves de imagem para emojis (para exibir no pedido)
+// Mapeamento de chaves de imagem para emojis
 const foodEmojis = {
   'hamburguer': '🍔',
   'refrigerante': '🥤',
-  'milkshake': '🍦',
+  'milkshake': '🧋',
   'batatas': '🍟',
   'ancora_prata': '⚓',
   'bigorna': '💣',
-  'guitarra': '🎸'
+  'bota': '🥾'
 };
 
-/* Objeto para definir a escala de cada tipo de comida
-const foodScales = {
-  'hamburguer': 0.2,
-  'refrigerante': 0.12,
-  'milkshake': 0.10,
-  'batatas': 0.15,
-  'ancora_prata': 0.4,
-  'bigorna': 0.13,
-  'guitarra': 0.17,
-};
-*/
 let fase = 1;
-//let metaDePontos = 150; 
 let jogador;
 let comidas;
 let cursors;
@@ -97,27 +93,18 @@ let scoreText;
 let vidaText;
 let faseText;
 let currentOrder = {};
-// AGORA: orderTextElement é a variável que faz referência ao elemento HTML <p id="order-text">
 let orderTextElement;
 let moveLeft = false;
 let moveRight = false;
 
 function preload() {
   this.load.image('jogador', './assets/img/jimmy_game.png');
-
-  // Carregar todas as boas comidas
-  this.load.image('hamburguer', './assets/img/hamburguer-1.png');
-  this.load.image('refrigerante', './assets/img/coca-removebg-preview.png');
-  this.load.image('milkshake', './assets/img/milkshake-removebg-preview.png');
-  this.load.image('batatas', './assets/img/batatafrita-removebg-preview.png');
-
-  // Carregar todas as más comidas (caminhos consistentes com './assets/img/')
-  this.load.image('ancora_prata', './assets/img/ancora_prata(png).png');
-  this.load.image('bigorna', './assets/img/bigorna-removebg-preview.png');
-  this.load.image('guitarra', './assets/img/guitarra-removebg-preview.png'); // <-- CONFIRME SE É .png OU .jpg
-  this.load.image('gamerover', './assets/img/gamerover.jpg');
+  this.load.image('gonovo', './assets/img/gonovo.png');
 }
 
+// ==================================================================
+// FUNÇÃO CREATE MODIFICADA
+// ==================================================================
 function create() {
   score = 0;
   vida = 3;
@@ -145,15 +132,14 @@ function create() {
     fontFamily: 'Lilita One, cursive'
   });
 
-  // AGORA: orderTextElement referencia o <p id="order-text"> dentro do HTML
   orderTextElement = document.querySelector('#order-text');
 
   generateNewOrder();
-  updateOrderText(); // Atualiza o texto do pedido na tela (agora no elemento HTML)
+  updateOrderText();
 
-  // Espera 3 segundos (3000 ms) antes de iniciar o jogo
   this.time.delayedCall(7000, () => {
-    this.time.addEvent({
+    // MODIFICADO: Demos um nome ao timer para podermos controlá-lo (pausar/retomar)
+    this.foodDropTimer = this.time.addEvent({
       delay: 1000,
       callback: dropFood,
       callbackScope: this,
@@ -223,11 +209,8 @@ function generateNewOrder() {
   }
 }
 
-/**
- * Atualiza o texto do pedido na tela (agora no elemento HTML).
- */
 function updateOrderText() {
-  let orderString = 'Pedido: '; // Mantive o "Pedido: " aqui
+  let orderString = 'Pedido: ';
   let firstItem = true;
 
   for (const item in currentOrder) {
@@ -235,7 +218,6 @@ function updateOrderText() {
       if (!firstItem) {
         orderString += ', ';
       }
-      // Usa o mapeamento de emojis para exibir no pedido, se disponível, senão usa o nome da chave
       const displayItem = foodEmojis[item] || (item.charAt(0).toUpperCase() + item.slice(1));
       orderString += `${currentOrder[item]} ${displayItem}`;
       firstItem = false;
@@ -245,14 +227,13 @@ function updateOrderText() {
   if (firstItem) {
     orderString = 'Pedido: COMPLETO!';
   }
-  // Atualiza o texto do elemento HTML
-  if (orderTextElement) { // Garante que o elemento existe antes de tentar modificar
+  if (orderTextElement) {
     orderTextElement.textContent = orderString;
   }
 }
 
 function dropFood() {
-  const x = Phaser.Math.Between(50, 350);
+  const x = Phaser.Math.Between(55, 300);
   let isGoodChance = Phaser.Math.Between(0, 1) === 1;
 
   let orderNotComplete = Object.values(currentOrder).some(q => q > 0);
@@ -260,17 +241,17 @@ function dropFood() {
     isGoodChance = true;
   }
 
-  let foodKey = isGoodChance
-    ? Phaser.Math.RND.pick(goodFoodKeys)
-    : Phaser.Math.RND.pick(badFoodKeys);
+  let foodKey = isGoodChance ?
+    Phaser.Math.RND.pick(goodFoodKeys) :
+    Phaser.Math.RND.pick(badFoodKeys);
 
-  const emoji = foodEmojis[foodKey] || '💣'; // Padrão para ruins
+  const emoji = foodEmojis[foodKey] || '💣';
 
   const food = this.add.text(x, 10, emoji, {
     fontSize: '32px'
   });
 
-  this.physics.add.existing(food); // Adiciona física ao texto
+  this.physics.add.existing(food);
 
   food.body.setVelocityY(Phaser.Math.Between(100, 200));
   food.isGood = isGoodChance;
@@ -280,6 +261,9 @@ function dropFood() {
   comidas.add(food);
 }
 
+// ==================================================================
+// FUNÇÃO CATCHFOOD MODIFICADA
+// ==================================================================
 function catchFood(jogador, food) {
   if (food.isGood) {
     score += 10;
@@ -292,12 +276,11 @@ function catchFood(jogador, food) {
     vida -= 1;
   }
 
-  //scoreText.setText('Pontos: ' + score + '/' + metaDePontos);
   vidaText.setText('❤️  ' + vida);
   food.destroy();
 
   if (vida <= 0) {
-    const gameOverImage = this.add.image(game.config.width / 2, game.config.height / 2, 'gamerover').setDisplaySize(300, 300);
+    const gameOverImage = this.add.image(game.config.width / 2, game.config.height / 2, 'gonovo').setDisplaySize(300, 300);
     this.physics.pause();
 
     this.time.delayedCall(5000, () => {
@@ -305,7 +288,10 @@ function catchFood(jogador, food) {
       game.destroy(true);
       document.querySelector('#menu').style.display = 'flex';
       document.querySelector('main').style.display = 'none';
+      if (clienteImg) clienteImg.classList.add("oculto");
+      if (clienteBalao) clienteBalao.classList.add("oculto"); 
     }, [], this);
+    return; // Adicionado para parar a execução aqui se o jogo acabou
   }
 
   let orderComplete = true;
@@ -316,24 +302,60 @@ function catchFood(jogador, food) {
     }
   }
 
+  // MODIFICADO: Lógica para transição de fase com timer
   if (orderComplete) {
+    // 1. Pausar a física e a queda de novos itens
+    this.physics.pause();
+    this.foodDropTimer.paused = true;
+
+    // 2. Preparar a próxima fase em segundo plano
     fase++;
-    //metaDePontos += 150; 
     faseText.setText('Fase ' + fase);
+    generateNewOrder(); // Gera o novo pedido ANTES para mostrá-lo durante o timer
 
-    // Pequeno atraso antes de gerar o próximo pedido para o "Pedido: COMPLETO!" ser visível
-    this.time.delayedCall(1000, () => { // 1 segundo de atraso
-      generateNewOrder();
+    // 3. Iniciar a sequência do timer de 3 segundos
+    // O `delayedCall` de 1000ms dá tempo para o jogador ler "Pedido: COMPLETO!"
+    this.time.delayedCall(1000, () => {
+
+      // 3a. Exibir o NOVO pedido no balão de diálogo
       updateOrderText();
+
+      // 3b. Criar o texto do contador regressivo
+      let countdown = 3;
+      const countdownText = this.add.text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY,
+        countdown, {
+          fontSize: '96px',
+          fill: '#ff6600', // Laranja
+          fontFamily: 'Lilita One, cursive',
+          stroke: '#ffffff', // Borda branca
+          strokeThickness: 8
+        }
+      ).setOrigin(0.5);
+
+      // 3c. Evento que atualiza o contador a cada segundo
+      this.time.addEvent({
+        delay: 1000,
+        callback: () => {
+          countdown--;
+          if (countdown > 0) {
+            countdownText.setText(countdown);
+          } else {
+            countdownText.setText('VAI!').setFontSize('80px'); // Mensagem final
+          }
+        },
+        repeat: 2 // Repete para os números 2 e 1
+      });
+
+      // 3d. Após 3 segundos no total, limpa tudo e retoma o jogo
+      this.time.delayedCall(3000, () => {
+        countdownText.destroy(); // Remove o texto do contador
+        this.physics.resume(); // Retoma a física (itens existentes voltam a cair)
+        this.foodDropTimer.paused = false; // Retoma a criação de novos itens
+      }, [], this);
+
     }, [], this);
-
-
-    comidas.children.iterate(food => {
-      if (food && food.body && food.body.setVelocityY) {
-        food.body.setVelocityY(Phaser.Math.Between(200 + fase * 20, 300 + fase * 30));
-      }
-    });
-
   }
 }
 

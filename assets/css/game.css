@@ -183,3 +183,47 @@ canvas {
 }
 
 /*FIM CONTROLES*/
+
+/* Modal */
+#modal-container {
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+}
+
+#modal {
+    width: 90%;
+    z-index: 20;
+    background-color: #3D3632;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+#modal-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+#modal-header button {
+    background: none;
+    outline: none;
+    border: none;
+    color: #E7DFCC;
+    font-size: 2rem;
+    font-family: "Lilita One", sans-serif;
+}
+
+#modal-footer p:first-child {
+    margin-bottom: 1rem;
+}
+
+/* FIM Modal */
