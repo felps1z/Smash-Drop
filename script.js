@@ -5,6 +5,12 @@ let first_time = true;
 const clienteImg = document.querySelector("#cliente_container img");
 const clienteBalao = document.getElementById("balao_cliente");
 
+document.querySelectorAll('#left-btn, #right-btn').forEach(botao => {
+  botao.addEventListener('touchstart', e => {
+    e.preventDefault();
+  }, { passive: false });
+});
+
 document.getElementById('play-btn').addEventListener('click', () => {
   document.querySelector('#menu').style.display = 'none';
   document.querySelector('main').style.display = 'flex';
