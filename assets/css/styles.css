@@ -98,6 +98,7 @@ body {
     transform: translateX(-50%);
     white-space: nowrap;
     color: #8C8C8C;
+    font-size: 16px;
 }
 
 #creditos a {

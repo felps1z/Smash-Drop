@@ -8,6 +8,7 @@ const clienteBalao = document.getElementById("balao_cliente");
 document.querySelectorAll('#left-btn, #right-btn').forEach(botao => {
   botao.addEventListener('touchstart', e => {
     e.preventDefault();
+    console.log('ola')
   }, { passive: false });
 });
 
