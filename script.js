@@ -16,6 +16,7 @@ document.getElementById('play-btn').addEventListener('click', () => {
   document.querySelector('#menu').style.display = 'none';
   document.querySelector('main').style.display = 'flex';
   if (first_time){
+    document.querySelector('#modal-container').style.display = 'flex';
     document.getElementById('fechar-modal').addEventListener('click', () => {
       document.querySelector('#modal-container').style.display = 'none';
       startGame();
