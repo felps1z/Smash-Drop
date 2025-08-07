@@ -5,6 +5,16 @@ let first_time = true;
 const clienteImg = document.querySelector("#cliente_container img");
 const clienteBalao = document.getElementById("balao_cliente");
 
+let lastTouchEnd = 0;
+
+document.addEventListener('touchend', function (event) {
+  const now = new Date().getTime();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}, false);
+
 document.querySelectorAll('#left-btn, #right-btn').forEach(botao => {
   botao.addEventListener('touchstart', e => {
     e.preventDefault();
