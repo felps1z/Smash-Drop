@@ -18,7 +18,6 @@ document.addEventListener('touchend', function (event) {
 document.querySelectorAll('#left-btn, #right-btn').forEach(botao => {
   botao.addEventListener('touchstart', e => {
     e.preventDefault();
-    console.log('ola')
   }, { passive: false });
 });
 
@@ -42,7 +41,7 @@ document.addEventListener('gesturechange', e => e.preventDefault(), { passive: f
 document.addEventListener('gestureend', e => e.preventDefault(), { passive: false });
 
 function startGame() {
-  game_container = document.querySelector('#game-container'); // Atribuir à variável global
+  game_container = document.querySelector('#game-container'); 
 
   const config = {
     type: Phaser.AUTO,
@@ -69,24 +68,23 @@ function startGame() {
   // Lógica dos balões de diálogo
   setTimeout(() => {
     const recepcionistaBalao = document.getElementById("balao_recepcionista");
-    const recepcionistaText = document.getElementById("recepcionista-text"); // Novo ID para o texto da recepcionista
+    const recepcionistaText = document.getElementById("recepcionista-text");
     if (recepcionistaBalao && recepcionistaText) {
-      recepcionistaText.textContent = "Olá! Pegue os pedidos para os clientes!"; // Texto inicial
-      recepcionistaBalao.classList.remove("oculto"); // Mostra o balão
+      recepcionistaText.textContent = "Olá! Pegue os pedidos para os clientes!";
+      recepcionistaBalao.classList.remove("oculto"); 
     }
 
     setTimeout(() => {
-      if (recepcionistaBalao) recepcionistaBalao.classList.add("oculto"); // Oculta o balão da recepcionista
+      if (recepcionistaBalao) recepcionistaBalao.classList.add("oculto");
       
-      if (clienteImg) clienteImg.classList.remove("oculto"); // Mostra o cliente
-      // O texto do pedido será atualizado por updateOrderText()
-      if (clienteBalao) clienteBalao.classList.remove("oculto"); // Mostra o balão do cliente
+      if (clienteImg) clienteImg.classList.remove("oculto");
+      if (clienteBalao) clienteBalao.classList.remove("oculto");
 
-    }, 5000); // Mostra por 5 segundos
-  }, 2000); // Começa após 2 segundos
+    }, 5000); 
+  }, 2000); 
 }
 
-// Listas de chaves para as imagens de comidas boas e ruins
+// Listas de chaves para as imagens
 const goodFoodKeys = ['hamburguer', 'refrigerante', 'milkshake', 'batatas'];
 const badFoodKeys = ['ancora_prata', 'bigorna', 'bota'];
 
@@ -121,7 +119,7 @@ function preload() {
 }
 
 // ==================================================================
-// FUNÇÃO CREATE MODIFICADA
+// FUNÇÃO CREATE
 // ==================================================================
 function create() {
   score = 0;
@@ -134,17 +132,22 @@ function create() {
 
   cursors = this.input.keyboard.createCursorKeys();
 
+  // Vidas
   vidaText = this.add.text(10, 10, '❤️ ' + vida, {
     fontSize: '24px',
     fill: '#000000',
     fontFamily: 'Lilita One, cursive'
   });
-  scoreText = this.add.text(10, 32, ' ', {
+
+  // Fase
+  faseText = this.add.text(145, 10, 'Fase ' + fase, {
     fontSize: '24px',
     fill: '#000000',
     fontFamily: 'Lilita One, cursive'
   });
-  faseText = this.add.text(145, 10, 'Fase ' + fase, {
+
+  // Pontos
+  scoreText = this.add.text(260, 10, 'Pontos: 0', {
     fontSize: '24px',
     fill: '#000000',
     fontFamily: 'Lilita One, cursive'
@@ -156,7 +159,6 @@ function create() {
   updateOrderText();
 
   this.time.delayedCall(7000, () => {
-    // MODIFICADO: Demos um nome ao timer para podermos controlá-lo (pausar/retomar)
     this.foodDropTimer = this.time.addEvent({
       delay: 1000,
       callback: dropFood,
@@ -280,23 +282,30 @@ function dropFood() {
 }
 
 // ==================================================================
-// FUNÇÃO CATCHFOOD MODIFICADA
+// FUNÇÃO CATCHFOOD (Lógica de pontos + Pop-up nova)
 // ==================================================================
 function catchFood(jogador, food) {
   if (food.isGood) {
-    score += 10;
+    // Verifica se a comida faz parte do pedido atual
     if (currentOrder[food.foodType] && currentOrder[food.foodType] > 0) {
+      score += 100; // Do cardápio: +100
       currentOrder[food.foodType]--;
       updateOrderText();
+    } else {
+      score += 50; // Comida boa, mas fora do cardápio: +50
     }
   } else if (food.isBad) {
-    score -= 5;
+    score -= 50; // Comida ruim: -50
     vida -= 1;
   }
 
+  // Atualiza placar
   vidaText.setText('❤️  ' + vida);
+  scoreText.setText('Pontos: ' + score);
+
   food.destroy();
 
+  // Game Over
   if (vida <= 0) {
     const gameOverImage = this.add.image(game.config.width / 2, game.config.height / 2, 'gonovo').setDisplaySize(300, 300);
     this.physics.pause();
@@ -309,7 +318,7 @@ function catchFood(jogador, food) {
       if (clienteImg) clienteImg.classList.add("oculto");
       if (clienteBalao) clienteBalao.classList.add("oculto"); 
     }, [], this);
-    return; // Adicionado para parar a execução aqui se o jogo acabou
+    return;
   }
 
   let orderComplete = true;
@@ -320,39 +329,52 @@ function catchFood(jogador, food) {
     }
   }
 
-  // MODIFICADO: Lógica para transição de fase com timer
+  // Passou de fase
   if (orderComplete) {
-    // 1. Pausar a física e a queda de novos itens
+    score += 300; // Bônus de fase
+    scoreText.setText('Pontos: ' + score);
+
+    // CRIA O POP-UP VISUAL
+    const popupText = this.add.text(game.config.width / 2, game.config.height / 2 - 50, 'Passou de Fase!\n+300 pontos!', {
+      fontSize: '40px',
+      fill: '#00ff00', // Verde vibrante
+      fontFamily: 'Lilita One, cursive',
+      stroke: '#000000',
+      strokeThickness: 6,
+      align: 'center'
+    }).setOrigin(0.5);
+
+    // Remove o pop-up após 2 segundos
+    this.time.delayedCall(2000, () => {
+      popupText.destroy();
+    }, [], this);
+
+    // 1. Pausar a física
     this.physics.pause();
     this.foodDropTimer.paused = true;
 
-    // 2. Preparar a próxima fase em segundo plano
+    // 2. Preparar próxima fase
     fase++;
     faseText.setText('Fase ' + fase);
-    generateNewOrder(); // Gera o novo pedido ANTES para mostrá-lo durante o timer
+    generateNewOrder(); 
 
-    // 3. Iniciar a sequência do timer de 3 segundos
-    // O `delayedCall` de 1000ms dá tempo para o jogador ler "Pedido: COMPLETO!"
+    // 3. Sequência do timer
     this.time.delayedCall(1000, () => {
-
-      // 3a. Exibir o NOVO pedido no balão de diálogo
       updateOrderText();
 
-      // 3b. Criar o texto do contador regressivo
       let countdown = 3;
       const countdownText = this.add.text(
         this.cameras.main.centerX,
         this.cameras.main.centerY,
         countdown, {
           fontSize: '96px',
-          fill: '#ff6600', // Laranja
+          fill: '#ff6600',
           fontFamily: 'Lilita One, cursive',
-          stroke: '#ffffff', // Borda branca
+          stroke: '#ffffff',
           strokeThickness: 8
         }
       ).setOrigin(0.5);
 
-      // 3c. Evento que atualiza o contador a cada segundo
       this.time.addEvent({
         delay: 1000,
         callback: () => {
@@ -360,17 +382,16 @@ function catchFood(jogador, food) {
           if (countdown > 0) {
             countdownText.setText(countdown);
           } else {
-            countdownText.setText('VAI!').setFontSize('80px'); // Mensagem final
+            countdownText.setText('VAI!').setFontSize('80px');
           }
         },
-        repeat: 2 // Repete para os números 2 e 1
+        repeat: 2 
       });
 
-      // 3d. Após 3 segundos no total, limpa tudo e retoma o jogo
       this.time.delayedCall(3000, () => {
-        countdownText.destroy(); // Remove o texto do contador
-        this.physics.resume(); // Retoma a física (itens existentes voltam a cair)
-        this.foodDropTimer.paused = false; // Retoma a criação de novos itens
+        countdownText.destroy();
+        this.physics.resume();
+        this.foodDropTimer.paused = false;
       }, [], this);
 
     }, [], this);
