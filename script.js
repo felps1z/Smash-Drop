@@ -132,7 +132,7 @@ function create() {
   cursors = this.input.keyboard.createCursorKeys();
 
   // Vidas
-  vidaText = this.add.text(10, 10, '❤️ ' + vida, {
+  vidaText = this.add.text(290, 10, '❤️ ' + vida, {
     fontSize: '24px',
     fill: '#000000',
     fontFamily: 'Lilita One, cursive'
@@ -146,7 +146,7 @@ function create() {
   });
 
   // Pontos
-  scoreText = this.add.text(260, 10, 'Pontos: 0', {
+  scoreText = this.add.text(10, 10, '🪙 ', {
     fontSize: '24px',
     fill: '#000000',
     fontFamily: 'Lilita One, cursive'
@@ -299,8 +299,8 @@ function catchFood(jogador, food) {
   }
 
   // Atualiza placar
-  vidaText.setText('❤️  ' + vida);
-  scoreText.setText('Pontos: ' + score);
+  vidaText.setText('❤️ ' + vida);
+  scoreText.setText('🪙 ' + score);
 
   food.destroy();
 
@@ -344,7 +344,7 @@ function catchFood(jogador, food) {
   // Passou de fase
   if (orderComplete) {
     score += 300; // Bônus de fase
-    scoreText.setText('Pontos: ' + score);
+    scoreText.setText('🪙 ' + score);
 
     // CRIA O POP-UP VISUAL
     const popupText = this.add.text(game.config.width / 2, game.config.height / 2 - 50, 'Passou de Fase!\n+300 pontos!', {
