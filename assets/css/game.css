@@ -197,6 +197,55 @@ canvas {
     position: absolute;
 }
 
+#modal-gameover {
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    padding: 3rem 0;
+}
+
+#modal-gameover p {
+    font-size: 2rem;
+}
+
+#gameover-logo-container{
+    width: 100%;
+    text-align: center
+}
+
+#gameover-container {
+    text-align: center;
+}
+
+#gameover-container p {
+    margin-top: 1rem;
+}
+
+#gameover-container img{
+    height: 10rem;
+}
+
+#gameover-logo-container img{
+    height: 7rem;
+}
+
+#voltar-menu {
+  animation: piscar 2s infinite ease-in-out;
+}
+
+@keyframes piscar {
+  0%   { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+
 #modal {
     width: 90%;
     z-index: 20;

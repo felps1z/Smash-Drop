@@ -115,7 +115,6 @@ let moveRight = false;
 
 function preload() {
   this.load.image('jogador', './assets/img/jimmy_game.png');
-  this.load.image('gonovo', './assets/img/gonovo.png');
 }
 
 // ==================================================================
@@ -307,18 +306,31 @@ function catchFood(jogador, food) {
 
   // Game Over
   if (vida <= 0) {
-    const gameOverImage = this.add.image(game.config.width / 2, game.config.height / 2, 'gonovo').setDisplaySize(300, 300);
     this.physics.pause();
 
-    this.time.delayedCall(5000, () => {
+    const modal = document.querySelector('#modal-gameover');
+    const btnVoltar = document.querySelector('#voltar-menu');
+    const menu = document.querySelector('#menu');
+    const main = document.querySelector('main');
+
+    modal.style.display = 'flex';
+    document.querySelector('#pontuacao').innerHTML = 'Pontuação: ' + score;
+
+    btnVoltar.addEventListener('click', () => {
+      const gameOverImage = this.add.image(game.config.width / 2, game.config.height / 2, 'gonovo').setDisplaySize(300, 300);
+      modal.style.display = 'none';
+
+      // Destrói o jogo Phaser
       gameOverImage.destroy();
       game.destroy(true);
-      document.querySelector('#menu').style.display = 'flex';
-      document.querySelector('main').style.display = 'none';
+      game = null;
       if (clienteImg) clienteImg.classList.add("oculto");
       if (clienteBalao) clienteBalao.classList.add("oculto"); 
-    }, [], this);
-    return;
+
+      // Volta para o menu
+      main.style.display = 'none';
+      menu.style.display = 'flex';
+    }, { once: true }); // 🔑 evita múltiplos cliques
   }
 
   let orderComplete = true;
