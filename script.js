@@ -132,7 +132,7 @@ function create() {
   cursors = this.input.keyboard.createCursorKeys();
 
   // Vidas
-  vidaText = this.add.text(280, 10, '❤️ ' + vida, {
+  vidaText = this.add.text(270, 10, '❤️ ' + vida, {
     fontSize: '24px',
     fill: '#000000',
     fontFamily: 'Lilita One, cursive'
