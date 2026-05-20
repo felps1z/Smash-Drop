@@ -78,7 +78,7 @@ Smash-Drop/
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/smash-drop.git
+git clone https://github.com/felps1z/smash-drop.git
 ```
 
 ### 2. Entre na pasta
